@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="./vis.min.js"></script>
+    <link rel="stylesheet" href="vis.min.css"> -->
+
+    <!-- <script type="text/javascript" src="https://unpkg.com/vis-data@latest/peer/umd/vis-data.min.js"></script> -->
+    <!-- <script type="text/javascript" src="https://unpkg.com/vis-network@latest/peer/umd/vis-network.min.js"></script> -->
+    <!-- <link rel="stylesheet" type="text/css" href="https://unpkg.com/vis-network/styles/vis-network.min.css" /> -->
+    <script type="text/javascript" src="./vis/vis-data.min.js"></script>
+    <script type="text/javascript" src="./vis//vis-network.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./vis/vis-network.min.css" />
+    <style>
+        #mynetwork{
+            width: 100%;
+            height: 100vh;
+            border: 1px solid red !important;
+        }
+    </style>
+</head>
+<body>
+    <input id="node_txt" type="text" value="测试">
+    <div id="mynetwork" ></div>
+    <script type="text/javascript">
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        { id: 1, label: "語文",borderWidth: 5, 
+            color: {
+            border: '#2B7CE9',
+            background: 'red',
+            highlight: {
+                border: '#2B7CE9',
+                background: '#D2E5FF'
+            },
+            hover: {
+                border: 'green',
+                background: '#D2E5FF'
+            }
+            },
+            fixed:true
+        },
+        { id: 2, label: "數學"},
+        { id: 3, label: "英语"},
+        { id: 4, label: "物理"},
+        { id: 5, label: "化学"}
+    ]);
+    
+    
+    // create an array with edges
+    var edges = new vis.DataSet([
+        { from: 1, to: 3 },
+        { from: 1, to: 2 },
+        { from: 2, to: 4 },
+        { from: 2, to: 5 }
+    ]);
+
+    // create a network
+    var container = document.getElementById("mynetwork");
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+        layout:{
+            randomSeed:1  // 固定一个,防止每次加载出来布局都变化
+        },
+        // 边
+        edges:{
+            arrows: {
+            to: {
+                enabled: true,
+                // imageHeight: undefined,
+                // imageWidth: undefined,
+                scaleFactor: 1,
+                // src: undefined,
+                type: "arrow"
+            },
+            middle: {
+                enabled: false,
+                imageHeight: 32,
+                imageWidth: 32,
+                scaleFactor: 1,
+                src: "https://visjs.org/images/visjs_logo.png",
+                type: "image"
+            },
+            from: {
+                enabled: false,
+                // imageHeight: undefined,
+                // imageWidth: undefined,
+                scaleFactor: 1,
+                // src: undefined,
+                type: "arrow"
+            }
+            },
+            arrowStrikethrough: true,
+            chosen: true,
+            color: {
+                color:'#848484',
+                highlight:'#848484',
+                hover: '#848484',
+                inherit: 'from',
+                opacity:1.0
+            },
+            dashes: true,   // 虚线
+            font: {
+                color: '#343434',
+                size: 14, // px
+                face: 'arial',
+                background: 'none',
+                strokeWidth: 2, // px
+                strokeColor: '#ffffff',
+                align: 'horizontal',
+                multi: false,
+                vadjust: 0,
+                bold: {
+                    color: '#343434',
+                    size: 14, // px
+                    face: 'arial',
+                    vadjust: 0,
+                    mod: 'bold'
+                },
+                ital: {
+                    color: '#343434',
+                    size: 14, // px
+                    face: 'arial',
+                    vadjust: 0,
+                    mod: 'italic',
+                },
+                boldital: {
+                    color: '#343434',
+                    size: 14, // px
+                    face: 'arial',
+                    vadjust: 0,
+                    mod: 'bold italic'
+                },
+                mono: {
+                    color: '#343434',
+                    size: 15, // px
+                    face: 'courier new',
+                    vadjust: 2,
+                    mod: ''
+                }
+            },
+            hidden: false,
+            hoverWidth: 1.5,
+            label: "chifan",
+            labelHighlightBold: true,
+            length: undefined,
+            physics: true,
+            scaling:{
+                min: 1,
+                max: 15,
+                label: {
+                    enabled: true,
+                    min: 14,
+                    max: 30,
+                    maxVisible: 30,
+                    drawThreshold: 5
+                },
+                customScalingFunction: function (min,max,total,value) {
+                    if (max === min) {
+                        return 0.5;
+                    }
+                    else {
+                        var scale = 1 / (max - min);
+                        return Math.max(0,(value - min)*scale);
+                    }
+                }
+            },
+            selectionWidth: 1,
+            selfReferenceSize: 20,
+            selfReference:{
+                size: 20,
+                angle: Math.PI / 4,
+                renderBehindTheNode: true
+            },
+            shadow:{
+                enabled: true,
+                color: 'rgba(0,0,0,0.5)',
+                size:10,
+                x:5,
+                y:5
+            },
+            smooth: {
+                enabled: true,
+                type: "dynamic",
+                roundness: 0.5
+            },
+            title:undefined,
+            value: undefined,
+            width: 1,
+            widthConstraint: false
+        },
+        
+        // 可视化操作
+        manipulation: {
+            enabled: true,
+            initiallyActive: true,
+            addNode: function(nodeData,callback){
+                // nodeData.label = document.getElementById('node_txt').value;
+                callback(nodeData);
+            },
+            addEdge: true,
+            editNode: function(nodeData,callback){
+                console.log(nodeData)
+                //nodeData.label = document.getElementById('node_txt').value;
+                callback(nodeData);
+            },
+            editEdge: true,
+            deleteNode: true,
+            deleteEdge: true,
+            controlNodeStyle:{
+                shape:'dot',
+                size:6,
+                color: {
+                    background: '#333',
+                    border: '#3c3c3c',
+                    highlight: {
+                        background: '#07f968',
+                        border: '#3c3c3c'
+                    }
+                },
+                borderWidth: 2,
+                borderWidthSelected: 20
+            }
+        },
+
+        // 交互
+        interaction:{
+            dragNodes:true,
+            dragView: true,
+            hideEdgesOnDrag: false,
+            hideEdgesOnZoom: false,
+            hideNodesOnDrag: false,
+            hover: true,
+            hoverConnectedEdges: true,
+            keyboard: {
+                enabled: false,
+                speed: {
+                    x: 10, y: 10, zoom: 0.02
+                },
+                bindToWindow: true
+            },
+            multiselect: false,
+            navigationButtons: false,
+            selectable: true,
+            selectConnectedEdges: true,
+            tooltipDelay: 300,
+            zoomView: true
+        },
+        
+        // 物理引擎(https://ame.cool/pages/d111d7/#%E9%85%8D%E7%BD%AE%E9%A1%B9%E8%AF%A6%E6%83%85)
+        physics:{
+            enabled: true,
+            barnesHut: {
+                theta: 0.5,
+                gravitationalConstant: -1000, // 重力吸引。斥力是负数。如果你想要更强的排斥力，降低这个值（-10000至-50000）
+                centralGravity: 0.1,
+                springLength: 95,
+                springConstant: 0.04,
+                damping: 0.09,
+                avoidOverlap: 0
+            },
+            forceAtlas2Based: {
+            theta: 0.5,
+            gravitationalConstant: -50,
+            centralGravity: 0.01,
+            springConstant: 0.08,
+            springLength: 100,
+            damping: 0.4,
+            avoidOverlap: 0
+            },
+            repulsion: {
+            centralGravity: 0.2,
+            springLength: 200,
+            springConstant: 0.05,
+            nodeDistance: 100,
+            damping: 0.09
+            },
+            hierarchicalRepulsion: {
+            centralGravity: 0.0,
+            springLength: 100,
+            springConstant: 0.01,
+            nodeDistance: 120,
+            damping: 0.09,
+            avoidOverlap: 0
+            },
+            maxVelocity: 50,
+            minVelocity: 0.1,
+            solver: 'barnesHut',
+            stabilization: {
+            enabled: true,
+            iterations: 1000,
+            updateInterval: 100,
+            onlyDynamicEdges: false,
+            fit: true
+            },
+            timestep: 0.5,
+            adaptiveTimestep: true,
+            wind: { x: 0, y: 0 }
+        }
+    };
+    
+    var network = new vis.Network(container, data, options);
+
+    console.log(network)
+    function redraw(fid){
+        // network.destroy()
+        // console.log(network.getSeed())
+        var id = parseInt(Math.random()*100000000);
+        console.log(id)
+        nodes.add({ id: id, label: ""+id });
+        edges.add({from: fid, to: id})
+    }
+    network.on('click',function(properties){
+        // console.log(properties)
+        console.log("单击:"+properties.nodes)
+        if (properties.nodes[0] != undefined){
+    
+            redraw(properties.nodes[0]);
+            // network.body.nodes[properties.nodes[0]].options.label = document.getElementById('node_txt').value
+        }
+    })
+    network.on('doubleClick',function(properties){
+        // console.log(properties)
+        console.log("双击:"+properties.nodes)
+        if (properties.nodes[0] != undefined){
+            // network.body.nodes[properties.nodes[0]].options.label = document.getElementById('node_txt').value
+        }
+    })
+    
+    </script>
+</body>
+</html>
